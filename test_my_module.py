@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import inspect
+import sys
+import traceback
 from collections import namedtuple
 
 
@@ -64,8 +66,33 @@ def run_collected_test_cases(test_cases):
         try:
             test_function()
         except AssertionError:
-            continue
-        passed_tests += 1
+            _exc_type, _exc_value, exc_traceback = sys.exc_info()
+
+            try:
+                crashed_frame = exc_traceback.tb_next.tb_frame
+                locals_ = crashed_frame.f_locals
+            finally:
+                del crashed_frame
+            crashed_stack = traceback.extract_tb(exc_traceback)
+            assertion_failure = crashed_stack[-1]
+
+            filename = assertion_failure.filename
+
+            # TODO: parse the line, get its AST, figure out
+            # TODO: what names are being used,
+            # TODO: then just print THOSE names
+            line = assertion_failure.line
+            lineno = assertion_failure.lineno
+
+            print("failed at", filename, end=", ")
+            print("line", lineno)
+            print(line)
+
+            print("where:")
+            for name, value in locals_.items():
+                print("   ", name, "=", repr(value))
+        else:
+            passed_tests += 1
 
     return TestResults(passed_tests=passed_tests, total_tests=num_tests)
 
