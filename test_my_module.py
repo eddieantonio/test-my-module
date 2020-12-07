@@ -29,6 +29,8 @@ class TestResults(namedtuple("BaseTestResults", "passed_tests total_tests")):
 def run_all_tests():
     """
     Runs all tests in the module that called it.
+
+    Prints dumb emoji to make you feel bad.
     """
 
     # figure out who called us
@@ -43,7 +45,11 @@ def run_all_tests():
     results = run_collected_test_cases(test_cases)
 
     print("ran", results.total_tests, "tests")
-    print(results.passed_tests, "passed")
+
+    if results.failed_tests > 0:
+        print("💥💥💥", results.failed_tests, "failed 💔💔💔")
+    else:
+        print("✨ all tests passed ✨ ☠️☠️☠️")
 
 
 def run_collected_test_cases(test_cases):
