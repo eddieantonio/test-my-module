@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import inspect
-
+from collections import namedtuple
 
 """
 test-my-module
@@ -17,6 +17,8 @@ test-my-module
         import test_my_module
         test_my_module.run_all_tests()
 """
+
+TestResults = namedtuple("TestResults", "passed_tests total_tests")
 
 
 def run_all_tests():
@@ -40,9 +42,15 @@ def run_collected_test_cases(test_cases):
     """
     Calls the test cases in order.
     """
+    num_tests = 0
+    passed_tests = 0
+
     for name, test_function in test_cases:
-        print("running", name)
+        num_tests += 1
         test_function()
+        passed_tests += 1
+
+    return TestResults(passed_tests=passed_tests, total_tests=num_tests)
 
 
 def collect_tests(global_object):

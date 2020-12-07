@@ -36,9 +36,15 @@ def test_collect_tests_from_dict():
 
 
 def test_run_tests_collected_tests():
+    """
+    Check that our test runner ACTUALLY calls our tests.
+    """
     mock = Mock()
 
     fake_test_cases = [("test_mock", mock)]
-    test_my_module.run_collected_test_cases(fake_test_cases)
+    results = test_my_module.run_collected_test_cases(fake_test_cases)
 
-    assert mock.called
+    assert mock.called, "our test was not called"
+
+    assert results.passed_tests == 1
+    assert results.total_tests == 1
