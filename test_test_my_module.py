@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
+from unittest.mock import Mock
+
 import test_my_module
 
 
@@ -33,5 +35,10 @@ def test_collect_tests_from_dict():
         assert callable(fn)
 
 
-def test_run_tests():
-    pass
+def test_run_tests_collected_tests():
+    mock = Mock()
+
+    fake_test_cases = [("test_mock", mock)]
+    test_my_module.run_collected_test_cases(fake_test_cases)
+
+    assert mock.called
