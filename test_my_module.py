@@ -27,12 +27,16 @@ def run_all_tests():
     # figure out who called us
     caller = inspect.currentframe().f_back
     try:
+        # What does the namespace look like?
         namespace = caller.f_globals
     finally:
         del caller
 
     test_cases = collect_tests(namespace)
-    print(list(test_cases))
+
+    for name, test_function in test_cases:
+        print("running", name)
+        test_function()
 
 
 def collect_tests(global_object):
