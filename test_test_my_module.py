@@ -5,6 +5,11 @@ import test_my_module
 
 
 def test_collect_tests_from_dict():
+    """
+    if you give collect_tests() a dictionary produced by globals() or the frame object
+    globals, it should return all of the test cases.
+    """
+
     def inc(x):
         return x + 1
 
@@ -26,3 +31,7 @@ def test_collect_tests_from_dict():
     for name, fn in all_tests:
         assert name.startswith("test")
         assert callable(fn)
+
+
+def test_run_tests():
+    pass

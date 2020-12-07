@@ -33,7 +33,13 @@ def run_all_tests():
         del caller
 
     test_cases = collect_tests(namespace)
+    run_collected_test_cases(test_cases)
 
+
+def run_collected_test_cases(test_cases):
+    """
+    Calls the test cases in order.
+    """
     for name, test_function in test_cases:
         print("running", name)
         test_function()
