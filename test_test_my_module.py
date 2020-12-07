@@ -47,4 +47,28 @@ def test_run_tests_collected_tests():
     assert mock.called, "our test was not called"
 
     assert results.passed_tests == 1
+    assert results.failed_tests == 0
     assert results.total_tests == 1
+
+
+def test_run_tests_collected_tests_with_failures():
+    """
+    Check that our test runner ACTUALLY calls our tests.
+    """
+
+    def test_failing():
+        assert False
+
+    test_passing = Mock()
+
+    fake_test_cases = [
+        ("test_failing", test_failing),
+        ("test_passing", test_passing),
+    ]
+    results = test_my_module.run_collected_test_cases(fake_test_cases)
+
+    assert test_passing.called, "our passing test was not called"
+
+    assert results.passed_tests == 1
+    assert results.failed_tests == 1
+    assert results.total_tests == 2

@@ -4,6 +4,7 @@
 import inspect
 from collections import namedtuple
 
+
 """
 test-my-module
 
@@ -18,7 +19,11 @@ test-my-module
         test_my_module.run_all_tests()
 """
 
-TestResults = namedtuple("TestResults", "passed_tests total_tests")
+
+class TestResults(namedtuple("BaseTestResults", "passed_tests total_tests")):
+    @property
+    def failed_tests(self):
+        return self.total_tests - self.passed_tests
 
 
 def run_all_tests():
@@ -35,7 +40,10 @@ def run_all_tests():
         del caller
 
     test_cases = collect_tests(namespace)
-    run_collected_test_cases(test_cases)
+    results = run_collected_test_cases(test_cases)
+
+    print("ran", results.total_tests, "tests")
+    print(results.passed_tests, "passed")
 
 
 def run_collected_test_cases(test_cases):
@@ -47,7 +55,10 @@ def run_collected_test_cases(test_cases):
 
     for name, test_function in test_cases:
         num_tests += 1
-        test_function()
+        try:
+            test_function()
+        except AssertionError:
+            continue
         passed_tests += 1
 
     return TestResults(passed_tests=passed_tests, total_tests=num_tests)
